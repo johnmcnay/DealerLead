@@ -31,7 +31,12 @@ namespace DealerLead.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
+                    .AddMicrosoftIdentityWebApp(options =>
+                    {
+                        Configuration.Bind("AzureAD", options);
+                        options.Events ??= new OpenIdConnectEvents();
+                        options.Events.OnTokenValidated += OnTokenValidatedFunc;
+                    });
 
             services.AddDbContext<DealerLeadDbContext>();
 
@@ -44,6 +49,17 @@ namespace DealerLead.Web
             });
             services.AddRazorPages()
                  .AddMicrosoftIdentityUI();
+        }
+
+        private async Task OnTokenValidatedFunc(TokenValidatedContext context)
+        {
+            // Custom code here
+            DealerLeadDbContext dbContext = new DealerLeadDbContext();
+
+            dbContext.Add(new DealerLeadUser { AzureAdId = IdentityHelper.GetAzureOIDToken(context.Principal) });
+            dbContext.SaveChanges();
+
+            await Task.CompletedTask.ConfigureAwait(false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

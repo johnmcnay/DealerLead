@@ -13,7 +13,7 @@ namespace DealerLead
         [Key]
         public int UserId { get; set; }
 
-        public Guid AzureAdId { get; set; }
+        public Guid? AzureAdId { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreateDate { get; set; }
