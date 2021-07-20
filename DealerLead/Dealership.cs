@@ -24,7 +24,7 @@ namespace DealerLead
         [Column("StateID")]
         public int StateId { get; set; }
 
-        public string Zipcode { get; set }
+        public string Zipcode { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreateDate { get; set; }

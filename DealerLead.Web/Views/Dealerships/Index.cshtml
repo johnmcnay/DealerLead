@@ -1,0 +1,12 @@
+﻿@model IEnumerable<DealerLead.Dealership>
+
+
+
+<h3>Dealerships</h3>
+
+<a href="/Dealerships/Create">Create New</a>
+
+@foreach (var dealership in Model)
+{
+    <p>@dealership.DealershipName</p>
+}

@@ -59,12 +59,25 @@ namespace DealerLead.Web.Controllers
         [Authorize]
         public IActionResult Register()
         {
-            DealerLeadUser newUser = new DealerLeadUser();
+            Guid? oid = IdentityHelper.GetAzureOIDToken(this.User);
 
-            newUser.AzureAdId = new Guid(GetOid());
+            var user = from u in _context.DealerLeadUser
+                       where u.AzureAdId == oid 
+                       select u;
 
-            _context.DealerLeadUser.Add(newUser);
-            _context.SaveChanges();
+            if (user.ToList().Count == 0)
+            {
+
+                DealerLeadUser newUser = new DealerLeadUser
+                {
+                    AzureAdId = oid
+                };
+
+                _context.DealerLeadUser.Add(newUser);
+                _context.SaveChanges();
+            }
+
+            
 
             return RedirectToAction("Index");
         }

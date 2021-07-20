@@ -56,9 +56,24 @@ namespace DealerLead.Web
             // Custom code here
             DealerLeadDbContext dbContext = new DealerLeadDbContext();
 
-            dbContext.Add(new DealerLeadUser { AzureAdId = IdentityHelper.GetAzureOIDToken(context.Principal) });
-            dbContext.SaveChanges();
+            Guid? oid = IdentityHelper.GetAzureOIDToken(context.Principal);
 
+            var user = from u in dbContext.DealerLeadUser
+                       where u.AzureAdId == oid
+                       select u;
+
+            if (user.ToList().Count == 0)
+            {
+
+                DealerLeadUser newUser = new DealerLeadUser
+                {
+                    AzureAdId = oid
+                };
+
+                dbContext.DealerLeadUser.Add(newUser);
+                dbContext.SaveChanges();
+            }
+            
             await Task.CompletedTask.ConfigureAwait(false);
         }
 
