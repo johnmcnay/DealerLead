@@ -1,0 +1,38 @@
+﻿@using System.Security.Principal 
+
+<h2>Welcome to DealerLead!</h2>
+<p>The #1 <em>lead tracking app</em> for dealerships</p>
+
+    @if (User.Identity.IsAuthenticated && ViewBag.ShowRegisterButton)
+    {
+        <p>You don't have an account. Please register.</p>
+        
+        <form method="post" action="/Home/Register">
+            <input type="submit" value="Register" />
+        </form>
+        
+    }
+    else if (ViewBag.Registered)
+    {
+<ul>
+    <li>
+        <a href="#">Manage your dealerships</a>
+    </li>
+    <li>
+        <a href="/SupportedStates">Manage supported states</a>
+    </li>
+    <li>
+        <a href="/SupportedMakes">Manage supported makes</a>
+    </li>
+    <li>
+        <a href="/SupportedModels">Manage supported models</a>
+    </li>
+    <li>
+        <a href="#">Vehicles</a>
+    </li>
+    <li>
+        <a href="#">Lead</a>
+    </li>
+
+</ul>
+    }
