@@ -24,17 +24,45 @@ namespace DealerLead.Web.Controllers
 
         public IActionResult Create()
         {
-         
+            var states = _context.SupportedState.ToList(); 
             
-            return View();
+            return View(states);
         }
 
         [HttpPost]
-        public IActionResult Create(Dealership dealership)
+        public IActionResult Create(Dealership dealership, int id)
         {
+            var userId = (from u in _context.DealerLeadUser
+                          where u.AzureAdId == IdentityHelper.GetAzureOIDToken(this.User)
+                          select u.UserId).FirstOrDefault();
 
+            dealership.CreatingUserId = userId;
+            dealership.State = id;
+
+            _context.Dealership.Add(dealership);
+            _context.SaveChanges();
 
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var dealership = (from d in _context.Dealership
+                             where d.DealershipId == id
+                             select d).FirstOrDefault();
+
+            var state = (from s in _context.SupportedState
+                         where dealership.State == s.id
+                         select s).FirstOrDefault();
+
+            ViewBag.State = state;
+
+            return View(dealership);
         }
 
     }

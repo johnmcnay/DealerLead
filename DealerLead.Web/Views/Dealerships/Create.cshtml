@@ -1,4 +1,6 @@
 ﻿
+@model IEnumerable<DealerLead.SupportedState>
+
 <form method="post" action="/Dealerships/Create">
     <label>
         Dealership Name
@@ -18,9 +20,14 @@
         <input type="text" name="City" />
     </label>
 
-    @*<label>State
-        <input type="text" name="StateID" />
-    </label>*@
+    <label>State
+        <select name="id">
+            @foreach (var state in Model)
+            {
+                <option value="@state.id">@state.Abbreviation</option>
+            }
+         </select>
+    </label>
     <label>Zipcode
         <input type="text" name="Zipcode" />
     </label>

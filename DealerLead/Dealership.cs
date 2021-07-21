@@ -22,7 +22,7 @@ namespace DealerLead
         public string City { get; set; }
 
         [Column("StateID")]
-        public int StateId { get; set; }
+        public int State { get; set; }
 
         public string Zipcode { get; set; }
 
