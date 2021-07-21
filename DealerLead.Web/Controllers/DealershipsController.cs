@@ -18,14 +18,15 @@ namespace DealerLead.Web.Controllers
         public IActionResult Index()
         {
             var dealerships = _context.Dealership.ToList();
+            ViewBag.States = _context.SupportedState.ToList();
 
             return View(dealerships);
         }
 
         public IActionResult Create()
         {
-            var states = _context.SupportedState.ToList(); 
-            
+            var states = _context.SupportedState.ToList();
+
             return View(states);
         }
 
@@ -67,6 +68,11 @@ namespace DealerLead.Web.Controllers
 
         public IActionResult Edit(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var dealership = (from d in _context.Dealership
                               where d.DealershipId == id
                               select d).FirstOrDefault();
@@ -86,8 +92,37 @@ namespace DealerLead.Web.Controllers
 
             _context.SaveChanges();
 
+            return RedirectToAction("Details", new { id = dealership.DealershipId });
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            var dealership = (from d in _context.Dealership
+                              where d.DealershipId == id
+                              select d).FirstOrDefault();
+
+            var state = (from s in _context.SupportedState
+                         where dealership.State == s.id
+                         select s).FirstOrDefault();
+
+            ViewBag.State = state;
+
+            return View(dealership);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var dealership = (from d in _context.Dealership
+                              where d.DealershipId == id
+                              select d).FirstOrDefault();
+
+            _context.Remove(dealership);
+            _context.SaveChanges();
+            
             return RedirectToAction("Index");
         }
+
 
     }
 }

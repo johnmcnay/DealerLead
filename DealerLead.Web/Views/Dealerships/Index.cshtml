@@ -4,7 +4,43 @@
 
 <a href="/Dealerships/Create">Create New</a>
 
-@foreach (var dealership in Model)
-{
-    <p><a href="/Dealerships/Details/@dealership.DealershipId">@dealership.DealershipName</a></p>
-}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Street Address 1</th>
+            <th>Street Address 2</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Zipcode</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var dealership in Model)
+        {
+        <tr>
+            <td>@dealership.DealershipName</td>
+            <td>@dealership.StreetAddress1</td>
+            <td>@dealership.StreetAddress2</td>
+            <td>@dealership.City</td>
+            <td>@foreach (var state in ViewBag.States)
+            {
+                if (state.id == dealership.State)
+                {
+                    <span>@state.Abbreviation</span>
+                    break;
+                }
+            } 
+            </td>
+            
+            <td>@dealership.Zipcode</td>
+            <td><a href="/Dealerships/Edit/@dealership.DealershipId">Edit</a> | <a href="/Dealerships/Details/@dealership.DealershipId">Details</a> | <a href="/Dealerships/Delete/@dealership.DealershipId">Delete</a></td>
+        </tr>
+            
+        }       
+    </tbody>
+    
+</table>
+
