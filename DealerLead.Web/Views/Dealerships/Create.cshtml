@@ -2,35 +2,47 @@
 @model IEnumerable<DealerLead.SupportedState>
 
 <form method="post" action="/Dealerships/Create">
-    <label>
-        Dealership Name
-        <input type="text" name="DealershipName" />
-    </label>
-
-    <label>
-        Street Address 1
-        <input type="text" name="StreetAddress1" />
-    </label>
-    <label>
-        Street Address 2
-        <input type="text" name="StreetAddress2" />
-    </label>
-    
-    <label>City
-        <input type="text" name="City" />
-    </label>
-
-    <label>State
-        <select name="id">
-            @foreach (var state in Model)
-            {
-                <option value="@state.id">@state.Abbreviation</option>
-            }
-         </select>
-    </label>
-    <label>Zipcode
-        <input type="text" name="Zipcode" />
-    </label>
+    <div class="form-group">
+        <label>
+            Dealership Name
+            <input class="form-control" type="text" name="DealershipName" />
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            Street Address 1
+            <input class="form-control" type="text" name="StreetAddress1" />
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            Street Address 2
+            <input class="form-control" type="text" name="StreetAddress2" />
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            City
+            <input class="form-control" type="text" name="City" />
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            State
+            <select class="form-control" name="id">
+                @foreach (var state in Model)
+                {
+                    <option value="@state.id">@state.Abbreviation</option>
+                }
+            </select>
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            Zipcode
+            <input class="form-control" type="text" name="Zipcode" />
+        </label>
+    </div>
     <input type="submit" />
 </form>
 

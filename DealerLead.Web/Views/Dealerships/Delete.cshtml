@@ -1,11 +1,33 @@
 ﻿@model DealerLead.Dealership
 
-<p>Name - @Model.DealershipName</p>
-<p>Street Address 1 - @Model.StreetAddress1</p>
-<p>Street Address 2 - @Model.StreetAddress2</p>
-<p>City - @Model.City</p>
-<p>State - @ViewBag.State.Name</p>
-<p>Zipcode - @Model.Zipcode</p>
+<table class="table w-50">
+    <tbody>
+        <tr>
+            <th scope="row">Name</th>
+            <td>@Model.DealershipName</td>
+        </tr>
+        <tr>
+            <th scope="row">Street Address 1</th>
+            <td>@Model.StreetAddress1</td>
+        </tr>
+        <tr>
+            <th scope="row">Street Address 2</th>
+            <td>@Model.StreetAddress2</td>
+        </tr>
+        <tr>
+            <th scope="row">City</th>
+            <td>@Model.City</td>
+        </tr>
+        <tr>
+            <th scope="row">State</th>
+            <td>@ViewBag.State.Name</td>
+        </tr>
+        <tr>
+            <th scope="row">Zipcode</th>
+            <td>@Model.Zipcode</td>
+        </tr>
+    </tbody>
+</table>
 <form method="post" action="/Dealerships/Delete/@Model.DealershipId">
     <input type="submit" value="Delete" />
 </form>

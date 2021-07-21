@@ -2,42 +2,63 @@
 @model DealerLead.Dealership
 
 <form method="post" action="/Dealerships/Edit/@Model.DealershipId">
-    
+
     <input type="hidden" name="DealershipId" value="@Model.DealershipId" />
     <input type="hidden" name="CreatingUserId" value="@Model.CreatingUserId" />
     <input type="hidden" name="CreateDate" value="@Model.CreateDate" />
-    <label>
-        Dealership Name
-        <input type="text" name="DealershipName" value="@Model.DealershipName"/>
-    </label>
+    <div class="form-group">
+        <label>
+            Dealership Name
+            <input class="form-control" type="text" name="DealershipName" value="@Model.DealershipName" />
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            Street Address 1
+            <input class="form-control" type="text" name="StreetAddress1" value="@Model.StreetAddress1" />
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            Street Address 2
+            <input class="form-control" type="text" name="StreetAddress2" value="@Model.StreetAddress2" />
+        </label>
+    </div>
+    <div class="form-group">
 
-    <label>
-        Street Address 1
-        <input type="text" name="StreetAddress1" value="@Model.StreetAddress1"/>
-    </label>
-    <label>
-        Street Address 2
-        <input type="text" name="StreetAddress2" value="@Model.StreetAddress2"/>
-    </label>
+        <label>
+            City
+            <input class="form-control" type="text" name="City" value="@Model.City" />
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            State
+            <select class="form-control" name="stateId">
+                @foreach (var state in ViewBag.States)
+                {
 
-    <label>
-        City
-        <input type="text" name="City" value="@Model.City"/>
-    </label>
+                    if (state.id == Model.State)
+                    {
+                        <option value="@state.id" selected>@state.Abbreviation</option>
+                    }
+                    else
+                    {
+                        <option value="@state.id">@state.Abbreviation</option>
+                    }
 
-    <label>
-        State
-        <select name="stateId">
-            @foreach (var state in ViewBag.States)
-            {
-                <option value="@state.id">@state.Abbreviation</option>
-            }
-        </select>
-    </label>
-    <label>
-        Zipcode
-        <input type="text" name="Zipcode" value="@Model.Zipcode"/>
-    </label>
+                }
+            </select>
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            Zipcode
+            <input class="form-control" type="text" name="Zipcode" value="@Model.Zipcode" />
+        </label>
+    </div>
+
     <input type="submit" />
 </form>
+<a href="/Dealerships">Back to List</a>
 
