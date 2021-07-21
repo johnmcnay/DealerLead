@@ -38,6 +38,12 @@ namespace DealerLead.Web
                         options.Events.OnTokenValidated += OnTokenValidatedFunc;
                     });
 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(300);
+                options.Cookie.HttpOnly = true;
+            });
+
             services.AddDbContext<DealerLeadDbContext>();
 
             services.AddControllersWithViews(options =>
@@ -94,7 +100,7 @@ namespace DealerLead.Web
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
 

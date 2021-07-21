@@ -39,11 +39,8 @@ namespace DealerLead.Web.Controllers
         [HttpPost]
         public IActionResult Create(Dealership dealership, int stateId)
         {
-            var userId = (from u in _context.DealerLeadUser
-                          where u.AzureAdId == IdentityHelper.GetAzureOIDToken(this.User)
-                          select u.UserId).FirstOrDefault();
 
-            dealership.CreatingUserId = userId;
+            dealership.CreatingUserId = GetUserId();
             dealership.State = stateId;
 
             _context.Dealership.Add(dealership);
@@ -150,6 +147,24 @@ namespace DealerLead.Web.Controllers
             }
 
             return data as List<SupportedState>;
+        }
+
+        public int GetUserId()
+        {
+            if (HttpContext.Session.TryGetValue("userId", out var userId) == false)
+            {
+                var result = (from u in _context.DealerLeadUser
+                              where u.AzureAdId == IdentityHelper.GetAzureOIDToken(this.User)
+                              select u.UserId).FirstOrDefault();
+
+                userId = BitConverter.GetBytes(result);
+                if (BitConverter.IsLittleEndian)
+                    Array.Reverse(userId);
+
+                HttpContext.Session.Set("userId", userId);
+            }
+
+            return BitConverter.ToInt32(userId);
         }
     }
 }
