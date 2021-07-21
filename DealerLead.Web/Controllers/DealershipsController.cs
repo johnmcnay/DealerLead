@@ -3,42 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 
 namespace DealerLead.Web.Controllers
 {
+   
+
     public class DealershipsController : Controller
     {
         private readonly DealerLeadDbContext _context;
-
-        public DealershipsController(DealerLeadDbContext context)
+        private IMemoryCache _cache;
+        
+        public DealershipsController(DealerLeadDbContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         public IActionResult Index()
         {
             var dealerships = _context.Dealership.ToList();
-            ViewBag.States = _context.SupportedState.ToList();
+            ViewBag.States = GetStates();
 
             return View(dealerships);
         }
 
         public IActionResult Create()
         {
-            var states = _context.SupportedState.ToList();
+            var states = GetStates();
 
             return View(states);
         }
 
         [HttpPost]
-        public IActionResult Create(Dealership dealership, int id)
+        public IActionResult Create(Dealership dealership, int stateId)
         {
             var userId = (from u in _context.DealerLeadUser
                           where u.AzureAdId == IdentityHelper.GetAzureOIDToken(this.User)
                           select u.UserId).FirstOrDefault();
 
             dealership.CreatingUserId = userId;
-            dealership.State = id;
+            dealership.State = stateId;
 
             _context.Dealership.Add(dealership);
             _context.SaveChanges();
@@ -54,7 +60,6 @@ namespace DealerLead.Web.Controllers
             }
 
             var dealership = GetDealership((int)id);
-
             var state = GetState(dealership, (int)id);
 
             ViewBag.State = state;
@@ -71,7 +76,7 @@ namespace DealerLead.Web.Controllers
 
             var dealership = GetDealership((int)id);
 
-            ViewBag.States = _context.SupportedState.ToList();
+            ViewBag.States = GetStates();
 
             return View(dealership);
         }
@@ -131,6 +136,20 @@ namespace DealerLead.Web.Controllers
                          select s).FirstOrDefault();
 
             return state;
+        }
+
+        public List<SupportedState> GetStates()
+        {
+
+            if (!_cache.TryGetValue("states", out var data))
+            {
+                // Key not in cache, so get data.
+                data = _context.SupportedState.ToList();
+                // Save data in cache and set the relative expiration time
+                _cache.Set("states", data, TimeSpan.FromMinutes(60));
+            }
+
+            return data as List<SupportedState>;
         }
     }
 }
