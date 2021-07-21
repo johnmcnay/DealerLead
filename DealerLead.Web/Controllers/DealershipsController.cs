@@ -53,13 +53,9 @@ namespace DealerLead.Web.Controllers
                 return NotFound();
             }
 
-            var dealership = (from d in _context.Dealership
-                             where d.DealershipId == id
-                             select d).FirstOrDefault();
+            var dealership = GetDealership((int)id);
 
-            var state = (from s in _context.SupportedState
-                         where dealership.State == s.id
-                         select s).FirstOrDefault();
+            var state = GetState(dealership, (int)id);
 
             ViewBag.State = state;
 
@@ -73,9 +69,7 @@ namespace DealerLead.Web.Controllers
                 return NotFound();
             }
 
-            var dealership = (from d in _context.Dealership
-                              where d.DealershipId == id
-                              select d).FirstOrDefault();
+            var dealership = GetDealership((int)id);
 
             ViewBag.States = _context.SupportedState.ToList();
 
@@ -85,7 +79,6 @@ namespace DealerLead.Web.Controllers
         [HttpPost]
         public IActionResult Edit(Dealership dealership, int id, int stateId)
         {
-
             _context.Update(dealership);
             dealership.ModifyDate = DateTime.Now;
             dealership.State = stateId;
@@ -97,13 +90,14 @@ namespace DealerLead.Web.Controllers
 
         public IActionResult Delete(int? id)
         {
-            var dealership = (from d in _context.Dealership
-                              where d.DealershipId == id
-                              select d).FirstOrDefault();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            var state = (from s in _context.SupportedState
-                         where dealership.State == s.id
-                         select s).FirstOrDefault();
+            var dealership = GetDealership((int) id);
+
+            var state = GetState(dealership, (int)id);
 
             ViewBag.State = state;
 
@@ -113,9 +107,7 @@ namespace DealerLead.Web.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            var dealership = (from d in _context.Dealership
-                              where d.DealershipId == id
-                              select d).FirstOrDefault();
+            var dealership = GetDealership(id);
 
             _context.Remove(dealership);
             _context.SaveChanges();
@@ -123,6 +115,22 @@ namespace DealerLead.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        public Dealership GetDealership(int id)
+        {
+            var dealership = (from d in _context.Dealership
+                              where d.DealershipId == id
+                              select d).FirstOrDefault();
 
+            return dealership;
+        }
+
+        public SupportedState GetState(Dealership dealership, int id)
+        {
+            var state = (from s in _context.SupportedState
+                         where dealership.State == s.id
+                         select s).FirstOrDefault();
+
+            return state;
+        }
     }
 }
