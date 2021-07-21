@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DealerLead;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DealerLead.Web.Controllers
 {
@@ -14,10 +11,12 @@ namespace DealerLead.Web.Controllers
     public class SupportedStatesController : Controller
     {
         private readonly DealerLeadDbContext _context;
+        private IMemoryCache _cache;
 
-        public SupportedStatesController(DealerLeadDbContext context)
+        public SupportedStatesController(DealerLeadDbContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         // GET: SupportedStates
@@ -55,12 +54,13 @@ namespace DealerLead.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Abbreviation,Name")] SupportedState supportedState)
+        public IActionResult Create([Bind("id,Abbreviation,Name")] SupportedState supportedState)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(supportedState);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
+                _cache.Set("states", _context.SupportedState.ToList());
                 return RedirectToAction(nameof(Index));
             }
             return View(supportedState);

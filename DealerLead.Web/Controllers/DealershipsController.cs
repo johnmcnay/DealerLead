@@ -8,8 +8,6 @@ using Newtonsoft.Json;
 
 namespace DealerLead.Web.Controllers
 {
-   
-
     public class DealershipsController : Controller
     {
         private readonly DealerLeadDbContext _context;
@@ -143,7 +141,7 @@ namespace DealerLead.Web.Controllers
                 // Key not in cache, so get data.
                 data = _context.SupportedState.ToList();
                 // Save data in cache and set the relative expiration time
-                _cache.Set("states", data, TimeSpan.FromMinutes(60));
+                _cache.Set("states", data, TimeSpan.FromMinutes(1));
             }
 
             return data as List<SupportedState>;
@@ -151,20 +149,12 @@ namespace DealerLead.Web.Controllers
 
         public int GetUserId()
         {
-            if (HttpContext.Session.TryGetValue("userId", out var userId) == false)
-            {
-                var result = (from u in _context.DealerLeadUser
-                              where u.AzureAdId == IdentityHelper.GetAzureOIDToken(this.User)
-                              select u.UserId).FirstOrDefault();
 
-                userId = BitConverter.GetBytes(result);
-                if (BitConverter.IsLittleEndian)
-                    Array.Reverse(userId);
+            var result = (from u in _context.DealerLeadUser
+                            where u.AzureAdId == IdentityHelper.GetAzureOIDToken(this.User)
+                            select u.UserId).FirstOrDefault();
 
-                HttpContext.Session.Set("userId", userId);
-            }
-
-            return BitConverter.ToInt32(userId);
+            return result;
         }
     }
 }

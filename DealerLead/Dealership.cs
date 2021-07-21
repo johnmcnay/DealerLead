@@ -33,6 +33,7 @@ namespace DealerLead
 
         public int CreatingUserId { get; set; }
 
+        public ICollection<Vehicle> Vehicle;
 
     }
 }

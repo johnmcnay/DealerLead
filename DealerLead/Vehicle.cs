@@ -8,14 +8,18 @@ using System.Threading.Tasks;
 
 namespace DealerLead
 {
-    public class SupportedModel
+    public class Vehicle
     {
         [Key]
-        public int ModelId { get; set; }
+        public int VehicleId { get; set; }
 
-        [Display(Name = "Model")]
-        public string ModelName { get; set; }
-        
+        public decimal MSRP { get; set; }
+
+        public string StockNumber { get; set; }
+
+        public string Color { get; set; }
+        public DateTime? SellDate { get; set; }
+
         [ScaffoldColumn(false)]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreateDate { get; set; }
@@ -23,10 +27,11 @@ namespace DealerLead
         [ScaffoldColumn(false)]
         public DateTime? ModifyDate { get; set; }
 
-        public int MakeId { get; set; }
-        public SupportedMake Make { get; set; }
+        public int ModelId { get; set; }
+        public SupportedModel Model { get; set; }
 
-        public ICollection<Vehicle> Vehicle;
+        public int DealershipId { get; set; }
+        public Dealership Dealership { get; set; }
 
     }
 }
