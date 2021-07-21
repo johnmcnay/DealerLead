@@ -65,5 +65,29 @@ namespace DealerLead.Web.Controllers
             return View(dealership);
         }
 
+        public IActionResult Edit(int? id)
+        {
+            var dealership = (from d in _context.Dealership
+                              where d.DealershipId == id
+                              select d).FirstOrDefault();
+
+            ViewBag.States = _context.SupportedState.ToList();
+
+            return View(dealership);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Dealership dealership, int id, int stateId)
+        {
+
+            _context.Update(dealership);
+            dealership.ModifyDate = DateTime.Now;
+            dealership.State = stateId;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
     }
 }

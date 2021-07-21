@@ -1,0 +1,43 @@
+﻿
+@model DealerLead.Dealership
+
+<form method="post" action="/Dealerships/Edit/@Model.DealershipId">
+    
+    <input type="hidden" name="DealershipId" value="@Model.DealershipId" />
+    <input type="hidden" name="CreatingUserId" value="@Model.CreatingUserId" />
+    <input type="hidden" name="CreateDate" value="@Model.CreateDate" />
+    <label>
+        Dealership Name
+        <input type="text" name="DealershipName" value="@Model.DealershipName"/>
+    </label>
+
+    <label>
+        Street Address 1
+        <input type="text" name="StreetAddress1" value="@Model.StreetAddress1"/>
+    </label>
+    <label>
+        Street Address 2
+        <input type="text" name="StreetAddress2" value="@Model.StreetAddress2"/>
+    </label>
+
+    <label>
+        City
+        <input type="text" name="City" value="@Model.City"/>
+    </label>
+
+    <label>
+        State
+        <select name="stateId">
+            @foreach (var state in ViewBag.States)
+            {
+                <option value="@state.id">@state.Abbreviation</option>
+            }
+        </select>
+    </label>
+    <label>
+        Zipcode
+        <input type="text" name="Zipcode" value="@Model.Zipcode"/>
+    </label>
+    <input type="submit" />
+</form>
+
